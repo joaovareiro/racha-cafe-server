@@ -15,9 +15,14 @@ gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
 gem "bootsnap", require: false
 
+gem 'rack-cors'
+
 group :development, :test do
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]
+  gem 'rspec-rails', '~> 4.1.0'
+  gem 'rswag'
 end
+
 
 group :development do
   gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
