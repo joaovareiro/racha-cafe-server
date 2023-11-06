@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :subscriptions, path: 'sub' do
     post 'create_with_inactive_status', on: :collection
     put 'cancel', on: :member
+    put 'renew', on: :member
   end
   
 end

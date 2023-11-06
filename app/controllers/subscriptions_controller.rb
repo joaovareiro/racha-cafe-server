@@ -27,6 +27,12 @@ class SubscriptionsController < ApplicationController
     @subscription.update(payment_status: 'cancelled')
     render json: { message: 'Subscription cancelled successfully' }
   end
+
+  def renew
+    @subscription = Subscription.find(params[:id])
+    @subscription.update(payment_status: 'active', expiration_date: Date.today + 1.month)
+    render json: { message: 'Subscription renewed successfully' }
+  end
   
 
   def update

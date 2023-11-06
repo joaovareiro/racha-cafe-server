@@ -60,6 +60,26 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
+  path '/sub/{id}/renew' do
+    parameter name: 'id', in: :path, type: :string, description: 'id'
+
+    put('renew subscription') do
+      tags 'Subscriptions'
+
+      response(200, 'successful') do
+        let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
+        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:id) { subscription.id }
+
+        example 'application/json', :example, {
+          "message": "Subscription renewed successfully"
+        }
+        run_test!
+      end
+    end
+  end
+
+
   path '/sub' do
 
     get('list subscriptions') do

@@ -56,6 +56,27 @@ paths:
                 example:
                   value:
                     message: Subscription cancelled successfully
+  "/sub/{id}/renew":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    put:
+      summary: renew subscription
+      tags:
+      - Subscriptions
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    message: Subscription renewed successfully
   "/sub":
     get:
       summary: list subscriptions
