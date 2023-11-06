@@ -4,6 +4,135 @@ info:
   title: API V1
   version: v1
 paths:
+  "/sub/create_with_inactive_status":
+    post:
+      summary: create_with_inactive_status subscription
+      tags:
+      - Subscriptions
+      parameters: []
+      responses:
+        '201':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    user_id: 1
+                    tuition_category: string
+                    payment_status: inactive
+                    expiration_date: '2023-11-05T23:13:39.989Z'
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                tuition_category:
+                  type: string
+  "/sub/{id}/cancel":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    put:
+      summary: cancel subscription
+      tags:
+      - Subscriptions
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    message: Subscription cancelled successfully
+  "/sub":
+    get:
+      summary: list subscriptions
+      tags:
+      - Subscriptions
+      responses:
+        '200':
+          description: successful
+    patch:
+      summary: update subscription
+      tags:
+      - Subscriptions
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    user_id: 1
+                    tuition_category: string
+                    payment_status: inactive
+                    expiration_date: '2023-11-05T23:13:39.989Z'
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                tuition_category:
+                  type: string
+                payment_status:
+                  type: string
+                expiration_date:
+                  type: date
+    put:
+      summary: update subscription
+      responses:
+        '200':
+          description: successful
+    delete:
+      summary: delete subscription
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: string
+      tags:
+      - Subscriptions
+      responses:
+        '204':
+          description: successful
+  "/sub/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show subscription
+      tags:
+      - Subscriptions
+      description: Returns a subscription
+      responses:
+        '200':
+          description: successful
   "/users":
     get:
       summary: list users
