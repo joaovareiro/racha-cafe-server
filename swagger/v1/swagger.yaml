@@ -64,11 +64,56 @@ paths:
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                  - id: 1
+                    user_id: 1
+                    tuition_category: string
+                    payment_status: inactive
+                    expiration_date: '2023-11-05T23:13:39.989Z'
+                    created_at: '2023-11-05T23:13:39.989Z'
+  "/sub/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show subscription
+      tags:
+      - Subscriptions
+      description: Returns a subscription
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    user_id: 1
+                    tuition_category: string
+                    payment_status: inactive
+                    expiration_date: '2023-11-05T23:13:39.989Z'
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
     patch:
       summary: update subscription
       tags:
       - Subscriptions
-      parameters: []
+      parameters:
+      - name: id
+        in: path
+        description: ID of the subscription to update
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: successful
@@ -100,9 +145,44 @@ paths:
                   type: date
     put:
       summary: update subscription
+      tags:
+      - Subscriptions
+      parameters:
+      - name: id
+        in: path
+        description: ID of the subscription to update
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    user_id: 1
+                    tuition_category: string
+                    payment_status: inactive
+                    expiration_date: '2023-11-05T23:13:39.989Z'
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                tuition_category:
+                  type: string
+                payment_status:
+                  type: string
+                expiration_date:
+                  type: date
     delete:
       summary: delete subscription
       parameters:
@@ -116,22 +196,6 @@ paths:
       - Subscriptions
       responses:
         '204':
-          description: successful
-  "/sub/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
-    get:
-      summary: show subscription
-      tags:
-      - Subscriptions
-      description: Returns a subscription
-      responses:
-        '200':
           description: successful
   "/users":
     get:

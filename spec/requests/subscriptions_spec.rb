@@ -66,14 +66,15 @@ RSpec.describe 'subscriptions', type: :request do
       tags 'Subscriptions'
       produces 'application/json'
       response(200, 'successful') do
-
-        after do |example|
-          example.metadata[:response][:content] = {
-            'application/json' => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+        example 'application/json', :example, [{
+          "id": 1,
+          "user_id": 1,
+          "tuition_category": "string",
+          "payment_status": "inactive",
+          "expiration_date": "2023-11-05T23:13:39.989Z",
+          "created_at": "2023-11-05T23:13:39.989Z",
           }
-        end
+        ]
         run_test!
       end
     end
@@ -90,7 +91,15 @@ RSpec.describe 'subscriptions', type: :request do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
         let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
-
+        example 'application/json', :example, {
+          "id": 1,
+          "user_id": 1,
+          "tuition_category": "string",
+          "payment_status": "inactive",
+          "expiration_date": "2023-11-05T23:13:39.989Z",
+          "created_at": "2023-11-05T23:13:39.989Z",
+          "updated_at": "2023-11-05T23:13:39.989Z",
+        }
         run_test!
       end
     end
