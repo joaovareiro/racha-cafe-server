@@ -30,6 +30,8 @@ class SubscriptionsController < ApplicationController
   
 
   def update
+    @subscription = Subscription.find(params[:id])
+
     if @subscription.update(subscription_params)
       render json: @subscription
     else
@@ -38,8 +40,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def destroy
+    @subscription = Subscription.find(params[:id])
     @subscription.destroy
-    render json: { message: 'Successfully deleted subscription' }, status: :ok
   end  
 
   private
