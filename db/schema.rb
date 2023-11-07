@@ -10,14 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_04_134225) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_07_022651) do
+  create_table "subscription_plans", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "subscriptions", force: :cascade do |t|
-    t.string "tuition_category"
     t.string "payment_status"
     t.date "expiration_date"
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "subscription_plan_id", null: false
+    t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -32,5 +41,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_04_134225) do
     t.string "password_digest"
   end
 
+  add_foreign_key "subscriptions", "subscription_plans"
   add_foreign_key "subscriptions", "users"
 end

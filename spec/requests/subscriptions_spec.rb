@@ -13,7 +13,7 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          subscription_plan_id: { type: :string },
+          subscription_plan_id: { type: :integer },
         }
       }
 
@@ -138,7 +138,7 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          subscription_plan_id: { type: :string },
+          subscription_plan_id: { type: :integer },
           payment_status: { type: :string },
           expiration_date: { type: :date }
         }
@@ -177,7 +177,7 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          subscription_plan_id: { type: :string },
+          subscription_plan_id: { type: :integer },
           payment_status: { type: :string },
           expiration_date: { type: :date }
         }

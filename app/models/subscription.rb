@@ -1,7 +1,7 @@
 class Subscription < ApplicationRecord
   belongs_to :user
+  belongs_to :subscription_plan
 
-  validates :tuition_category, presence: true
   validates :payment_status, presence: true
   validates :expiration_date, presence: true
 

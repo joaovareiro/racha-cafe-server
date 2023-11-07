@@ -4,7 +4,145 @@ info:
   title: API V1
   version: v1
 paths:
-  "/sub/create_with_inactive_status":
+  "/sub/plan":
+    post:
+      summary: create subscription plan
+      tags:
+      - SubscriptionPlans
+      parameters: []
+      responses:
+        '201':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+                    price: 100
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: integer
+    get:
+      summary: list subscription plans
+      tags:
+      - SubscriptionPlans
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+                    price: 100
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+  "/sub/plan/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show subscription plan
+      tags:
+      - SubscriptionPlans
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: string
+                    description: string
+                    price: 100
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+    patch:
+      summary: update subscription plan
+      tags:
+      - SubscriptionPlans
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: new string
+                    description: string
+                    price: 100
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: integer
+    put:
+      summary: update subscription plan
+      tags:
+      - SubscriptionPlans
+      parameters: []
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: new string
+                    description: string
+                    price: 100
+                    created_at: '2023-11-05T23:13:39.989Z'
+                    updated_at: '2023-11-05T23:13:39.989Z'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: integer
+  "/sub/subscription/create_with_inactive_status":
     post:
       summary: create_with_inactive_status subscription
       tags:
@@ -33,9 +171,9 @@ paths:
               properties:
                 user_id:
                   type: integer
-                tuition_category:
-                  type: string
-  "/sub/{id}/cancel":
+                subscription_plan_id:
+                  type: integer
+  "/sub/subscription/{id}/cancel":
     parameters:
     - name: id
       in: path
@@ -56,7 +194,7 @@ paths:
                 example:
                   value:
                     message: Subscription cancelled successfully
-  "/sub/{id}/renew":
+  "/sub/subscription/{id}/renew":
     parameters:
     - name: id
       in: path
@@ -77,7 +215,7 @@ paths:
                 example:
                   value:
                     message: Subscription renewed successfully
-  "/sub":
+  "/sub/subscription":
     get:
       summary: list subscriptions
       tags:
@@ -92,11 +230,11 @@ paths:
                   value:
                   - id: 1
                     user_id: 1
-                    tuition_category: string
+                    subscription_plan_id: integer
                     payment_status: inactive
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
-  "/sub/{id}":
+  "/sub/subscription/{id}":
     parameters:
     - name: id
       in: path
@@ -119,7 +257,7 @@ paths:
                   value:
                     id: 1
                     user_id: 1
-                    tuition_category: string
+                    subscription_plan_id: integer
                     payment_status: inactive
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
@@ -145,7 +283,7 @@ paths:
                   value:
                     id: 1
                     user_id: 1
-                    tuition_category: string
+                    subscription_plan_id: integer
                     payment_status: inactive
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
@@ -158,8 +296,8 @@ paths:
               properties:
                 user_id:
                   type: integer
-                tuition_category:
-                  type: string
+                subscription_plan_id:
+                  type: integer
                 payment_status:
                   type: string
                 expiration_date:
@@ -185,7 +323,7 @@ paths:
                   value:
                     id: 1
                     user_id: 1
-                    tuition_category: string
+                    subscription_plan_id: integer
                     payment_status: inactive
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
@@ -198,8 +336,8 @@ paths:
               properties:
                 user_id:
                   type: integer
-                tuition_category:
-                  type: string
+                subscription_plan_id:
+                  type: integer
                 payment_status:
                   type: string
                 expiration_date:
@@ -218,7 +356,7 @@ paths:
       responses:
         '204':
           description: successful
-  "/users":
+  "/sub/users":
     get:
       summary: list users
       tags:
@@ -278,7 +416,7 @@ paths:
                   type: string
                 role:
                   type: string
-  "/users/{id}":
+  "/sub/users/{id}":
     parameters:
     - name: id
       in: path
