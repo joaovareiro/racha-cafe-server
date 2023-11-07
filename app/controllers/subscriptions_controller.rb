@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  before_action :set_subscription, only: [:show, :update, :destroy]
+  before_action :set_subscription, only: [:show, :update, :destroy, :cancel, :renew]
 
   def index
     @subscriptions = Subscription.all
@@ -23,21 +23,17 @@ class SubscriptionsController < ApplicationController
   end
 
   def cancel
-    @subscription = Subscription.find(params[:id])
     @subscription.update(payment_status: 'cancelled')
     render json: { message: 'Subscription cancelled successfully' }
   end
 
   def renew
-    @subscription = Subscription.find(params[:id])
     @subscription.update(payment_status: 'active', expiration_date: Date.today + 1.month)
     render json: { message: 'Subscription renewed successfully' }
   end
   
 
   def update
-    @subscription = Subscription.find(params[:id])
-
     if @subscription.update(subscription_params)
       render json: @subscription
     else
@@ -46,7 +42,6 @@ class SubscriptionsController < ApplicationController
   end
 
   def destroy
-    @subscription = Subscription.find(params[:id])
     @subscription.destroy
   end  
 
