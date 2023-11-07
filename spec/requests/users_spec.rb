@@ -2,7 +2,7 @@ require 'swagger_helper'
 
 RSpec.describe 'users', type: :request do
 
-  path '/users' do
+  path '/sub/users' do
 
     get('list users') do
       tags 'Users'
@@ -67,7 +67,7 @@ RSpec.describe 'users', type: :request do
     end
   end
 
-  path '/users/{id}' do
+  path '/sub/users/{id}' do
     parameter name: 'id', in: :path, type: :string, description: 'id'
 
     get('show user') do

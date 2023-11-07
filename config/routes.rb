@@ -4,11 +4,13 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :users
-  resources :subscriptions, path: 'sub' do
-    post 'create_with_inactive_status', on: :collection
-    put 'cancel', on: :member
-    put 'renew', on: :member
+  namespace :sub do
+    resources :users
+    resources :subscription_plans, path: 'plan'
+    resources :subscriptions, path: 'subscription' do
+      post 'create_with_inactive_status', on: :collection
+      put 'cancel', on: :member
+      put 'renew', on: :member
+    end
   end
-  
 end

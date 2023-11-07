@@ -2,7 +2,7 @@ require 'swagger_helper'
 
 RSpec.describe 'subscriptions', type: :request do
 
-  path '/sub/create_with_inactive_status' do
+  path '/sub/subscription/create_with_inactive_status' do
 
     post('create_with_inactive_status subscription') do
       tags 'Subscriptions'
@@ -13,16 +13,16 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          tuition_category: { type: :string }
+          subscription_plan_id: { type: :string },
         }
       }
 
       response(201, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
         let(:new_subscription) {{
           user_id: user.id,
-          tuition_category: 'string',
+          subscription_plan_id: subscription_plan.id,
           payment_status: 'inactive',
           expiration_date: Date.today
         }}
@@ -41,7 +41,7 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
-  path '/sub/{id}/cancel' do
+  path '/sub/subscription/{id}/cancel' do
     parameter name: 'id', in: :path, type: :string, description: 'id'
 
     put('cancel subscription') do
@@ -49,7 +49,8 @@ RSpec.describe 'subscriptions', type: :request do
 
       response(200, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
 
         example 'application/json', :example, {
@@ -60,7 +61,7 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
-  path '/sub/{id}/renew' do
+  path '/sub/subscription/{id}/renew' do
     parameter name: 'id', in: :path, type: :string, description: 'id'
 
     put('renew subscription') do
@@ -68,7 +69,8 @@ RSpec.describe 'subscriptions', type: :request do
 
       response(200, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
 
         example 'application/json', :example, {
@@ -80,7 +82,7 @@ RSpec.describe 'subscriptions', type: :request do
   end
 
 
-  path '/sub' do
+  path '/sub/subscription' do
 
     get('list subscriptions') do
       tags 'Subscriptions'
@@ -89,7 +91,7 @@ RSpec.describe 'subscriptions', type: :request do
         example 'application/json', :example, [{
           "id": 1,
           "user_id": 1,
-          "tuition_category": "string",
+          "subscription_plan_id": "integer",
           "payment_status": "inactive",
           "expiration_date": "2023-11-05T23:13:39.989Z",
           "created_at": "2023-11-05T23:13:39.989Z",
@@ -99,7 +101,7 @@ RSpec.describe 'subscriptions', type: :request do
       end
     end
 
-  path '/sub/{id}' do
+  path '/sub/subscription/{id}' do
     parameter name: 'id', in: :path, type: :string, description: 'id'
 
     get('show subscription') do
@@ -109,12 +111,13 @@ RSpec.describe 'subscriptions', type: :request do
         description 'Returns a subscription'
 
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
         example 'application/json', :example, {
           "id": 1,
           "user_id": 1,
-          "tuition_category": "string",
+          "subscription_plan_id": "integer",
           "payment_status": "inactive",
           "expiration_date": "2023-11-05T23:13:39.989Z",
           "created_at": "2023-11-05T23:13:39.989Z",
@@ -125,7 +128,7 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
-  path '/sub/{id}' do
+  path '/sub/subscription/{id}' do
     patch('update subscription') do
       tags 'Subscriptions'
       consumes 'application/json'
@@ -135,7 +138,7 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          tuition_category: { type: :string },
+          subscription_plan_id: { type: :string },
           payment_status: { type: :string },
           expiration_date: { type: :date }
         }
@@ -143,16 +146,17 @@ RSpec.describe 'subscriptions', type: :request do
 
       response(200, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
         let(:new_subscription) {{
-          tuition_category: 'string',
+          payment_status: 'active',
         }}
 
         example 'application/json', :example, {
           "id": 1,
           "user_id": 1,
-          "tuition_category": "string",
+          "subscription_plan_id": "integer",
           "payment_status": "inactive",
           "expiration_date": "2023-11-05T23:13:39.989Z",
           "created_at": "2023-11-05T23:13:39.989Z",
@@ -163,7 +167,7 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
-  path '/sub/{id}' do
+  path '/sub/subscription/{id}' do
     put('update subscription') do
       tags 'Subscriptions'
       consumes 'application/json'
@@ -173,7 +177,7 @@ RSpec.describe 'subscriptions', type: :request do
         type: :object,
         properties: {
           user_id: { type: :integer },
-          tuition_category: { type: :string },
+          subscription_plan_id: { type: :string },
           payment_status: { type: :string },
           expiration_date: { type: :date }
         }
@@ -181,16 +185,18 @@ RSpec.describe 'subscriptions', type: :request do
 
       response(200, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
         let(:new_subscription) {{
-          tuition_category: 'string',
+          payment_status: 'active',
+          subscription_plan_id: subscription_plan.id
         }}
 
         example 'application/json', :example, {
           "id": 1,
           "user_id": 1,
-          "tuition_category": "string",
+          "subscription_plan_id": "integer",
           "payment_status": "inactive",
           "expiration_date": "2023-11-05T23:13:39.989Z",
           "created_at": "2023-11-05T23:13:39.989Z",
@@ -201,7 +207,7 @@ RSpec.describe 'subscriptions', type: :request do
     end
   end
 
-  path '/sub/{id}' do
+  path '/sub/subscription/{id}' do
     delete('delete subscription') do
       parameter name: 'id', in: :path, type: :string, description: 'id'
 
@@ -209,7 +215,8 @@ RSpec.describe 'subscriptions', type: :request do
       produces 'application/json'
       response(204, 'successful') do
         let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
-        let(:subscription) { Subscription.create!(user_id: user.id, tuition_category: 'string', payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
         let(:id) { subscription.id }
         run_test!
       end
