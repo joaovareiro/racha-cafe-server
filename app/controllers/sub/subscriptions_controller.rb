@@ -11,7 +11,7 @@ module Sub
       render json: @subscription
     end
 
-    def create_with_inactive_status
+    def create
       @subscription = Subscription.new(subscription_params)
       @subscription.payment_status = 'inactive'
       @subscription.expiration_date = Date.today
