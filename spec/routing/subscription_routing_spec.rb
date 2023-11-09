@@ -26,8 +26,8 @@ RSpec.describe Sub::SubscriptionsController, type: :routing do
       expect(delete: '/sub/subscription/1').to route_to('sub/subscriptions#destroy', id: '1')
     end
 
-    it 'routes to #create_with_inactive_status' do
-      expect(post: '/sub/subscription/create_with_inactive_status').to route_to('sub/subscriptions#create_with_inactive_status')
+    it 'routes to #create' do
+      expect(post: '/sub/subscription/').to route_to('sub/subscriptions#create')
     end
 
     it 'routes to #cancel' do

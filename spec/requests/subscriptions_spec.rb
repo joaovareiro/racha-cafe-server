@@ -2,9 +2,9 @@ require 'swagger_helper'
 
 RSpec.describe 'subscriptions', type: :request do
 
-  path '/sub/subscription/create_with_inactive_status' do
+  path '/sub/subscription/' do
 
-    post('create_with_inactive_status subscription') do
+    post('create subscription') do
       tags 'Subscriptions'
       consumes 'application/json'
       produces 'application/json'
