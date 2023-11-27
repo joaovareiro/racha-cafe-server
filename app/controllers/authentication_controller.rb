@@ -1,7 +1,7 @@
 class AuthenticationController < ApplicationController
   include AuthenticationHelper
 
-  before_action :authenticate_request, only: [:secured_action, :get_user_info]
+  before_action :authenticate_request, only: [:get_user_info]
 
   def authenticate
     username = params[:username]
@@ -22,10 +22,6 @@ class AuthenticationController < ApplicationController
     access_token = refresh_access_token(refresh_token)
 
     render json: { access_token: access_token }
-  end
-
-  def secured_action
-    render json: { message: 'Secured action successful!' }
   end
 
   def get_user_info
