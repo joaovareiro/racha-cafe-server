@@ -37,11 +37,20 @@ module AuthenticationHelper
     body = "client_id=facoffee&grant_type=password&username=#{username}&password=#{password}&scope=openid"
   
     response = make_keycloak_request(keycloak_url, :post, headers, body)
-  
-    access_token = response['access_token']
-    refresh_token = response['refresh_token']
-  
-    return access_token, refresh_token
+    
+    if response
+      if response['error'].present?
+        Rails.logger.error("Keycloak error: #{response['error_description']}")
+        return nil, nil
+      else
+        access_token = response['access_token']
+        refresh_token = response['refresh_token']
+        return access_token, refresh_token
+      end
+    else
+      Rails.logger.error("Keycloak request failed. Response: #{response.inspect}")
+      return nil, nil
+    end
   end
   
   def retrieve_access_token(username, password)
