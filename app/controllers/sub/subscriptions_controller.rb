@@ -38,14 +38,14 @@ module Sub
       if @subscription.payment_status == 'active'
         new_expiration_date = @subscription.expiration_date + months_to_renew.months
         @subscription.update(expiration_date: new_expiration_date)
-        create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months")
-        render json: { message: "Subscription renewed successfully for #{months_to_renew} months" }
+        create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months. New expiration date: #{new_expiration_date}")
+        render json: { message: "Subscription renewed successfully for #{months_to_renew} months. New expiration date: #{new_expiration_date}" }
       else
-        if @subscription.payment_status == 'expired' or @subscription.payment_status == 'inactive'
+        if @subscription.payment_status == 'expired' || @subscription.payment_status == 'inactive'
           new_expiration_date = Date.today + months_to_renew.months
           @subscription.update(payment_status: 'active', expiration_date: new_expiration_date)
-          create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months")
-          render json: { message: "Subscription renewed successfully for #{months_to_renew} months" }
+          create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months. New expiration date: #{new_expiration_date}")
+          render json: { message: "Subscription renewed successfully for #{months_to_renew} months. New expiration date: #{new_expiration_date}" }
         else
           @subscription.update(payment_status: 'expired', expiration_date: Date.today)
           create_subscription_event('Subscription Expired', 'Subscription expired due to non-payment')
@@ -53,6 +53,7 @@ module Sub
         end
       end
     end
+    
     
     def update
       if @subscription.update(subscription_params)
