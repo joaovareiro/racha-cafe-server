@@ -1,15 +1,94 @@
 ---
-openapi: 3.0.1
+swagger: '2.0'
 info:
   title: API V1
   version: v1
 paths:
+  "/authenticate":
+    post:
+      summary: Authenticate user
+      tags:
+      - Authentication
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: user_credentials
+        in: body
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+          required:
+          - username
+          - password
+      responses:
+        '200':
+          description: successful
+  "/refresh_token":
+    post:
+      summary: Refresh access token
+      tags:
+      - Authentication
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: refresh_token
+        in: body
+        schema:
+          type: object
+          properties:
+            refresh_token:
+              type: string
+          required:
+          - refresh_token
+      responses:
+        '200':
+          description: successful
+  "/get_user_info":
+    get:
+      summary: Get user information
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+      tags:
+      - Authentication
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: successful
   "/sub/plan":
     post:
       summary: create subscription plan
       tags:
       - SubscriptionPlans
-      parameters: []
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: new_subscription_plan
+        in: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: integer
       responses:
         '201':
           description: successful
@@ -24,22 +103,12 @@ paths:
                     price: 100
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-                price:
-                  type: integer
     get:
       summary: list subscription plans
       tags:
       - SubscriptionPlans
+      produces:
+      - application/json
       responses:
         '200':
           description: successful
@@ -58,14 +127,15 @@ paths:
     parameters:
     - name: id
       in: path
+      type: string
       description: id
       required: true
-      schema:
-        type: string
     get:
       summary: show subscription plan
       tags:
       - SubscriptionPlans
+      produces:
+      - application/json
       responses:
         '200':
           description: successful
@@ -84,7 +154,22 @@ paths:
       summary: update subscription plan
       tags:
       - SubscriptionPlans
-      parameters: []
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - name: new_subscription_plan
+        in: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: integer
       responses:
         '200':
           description: successful
@@ -99,23 +184,26 @@ paths:
                     price: 100
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-                price:
-                  type: integer
     put:
       summary: update subscription plan
       tags:
       - SubscriptionPlans
-      parameters: []
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      parameters:
+      - name: new_subscription_plan
+        in: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            price:
+              type: integer
       responses:
         '200':
           description: successful
@@ -130,24 +218,25 @@ paths:
                     price: 100
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                description:
-                  type: string
-                price:
-                  type: integer
   "/sub/subscription/":
     post:
       summary: create subscription
       tags:
       - Subscriptions
-      parameters: []
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: new_subscription
+        in: body
+        schema:
+          type: object
+          properties:
+            user_id:
+              type: string
+            subscription_plan_id:
+              type: integer
       responses:
         '201':
           description: successful
@@ -163,24 +252,17 @@ paths:
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user_id:
-                  type: integer
-                subscription_plan_id:
-                  type: integer
   "/sub/subscription/{id}/cancel":
     parameters:
     - name: id
       in: path
+      type: string
       description: id
       required: true
-      schema:
-        type: string
+    - name: Authorization
+      in: header
+      type: string
+      required: true
     put:
       summary: cancel subscription
       tags:
@@ -198,16 +280,18 @@ paths:
     parameters:
     - name: id
       in: path
+      type: string
       description: Subscription ID
       required: true
-      schema:
-        type: string
     - name: months_to_renew
       in: query
+      type: integer
       description: Number of months to renew
       default: 1
-      schema:
-        type: integer
+    - name: Authorization
+      in: header
+      type: string
+      required: true
     put:
       summary: renew subscription
       tags:
@@ -225,10 +309,13 @@ paths:
     parameters:
     - name: id
       in: path
+      type: string
       description: Subscription ID
       required: true
-      schema:
-        type: string
+    - name: Authorization
+      in: header
+      type: string
+      required: true
     get:
       summary: list subscription events
       tags:
@@ -253,6 +340,8 @@ paths:
       summary: list subscriptions
       tags:
       - Subscriptions
+      produces:
+      - application/json
       responses:
         '200':
           description: successful
@@ -271,14 +360,19 @@ paths:
     parameters:
     - name: id
       in: path
+      type: string
       description: id
       required: true
-      schema:
-        type: string
+    - name: Authorization
+      in: header
+      type: string
+      required: true
     get:
       summary: show subscription
       tags:
       - Subscriptions
+      produces:
+      - application/json
       description: Returns a subscription
       responses:
         '200':
@@ -299,13 +393,33 @@ paths:
       summary: update subscription
       tags:
       - Subscriptions
+      consumes:
+      - application/json
+      produces:
+      - application/json
       parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
       - name: id
         in: path
+        type: integer
         description: ID of the subscription to update
         required: true
+      - name: new_subscription
+        in: body
         schema:
-          type: integer
+          type: object
+          properties:
+            user_id:
+              type: integer
+            subscription_plan_id:
+              type: integer
+            payment_status:
+              type: string
+            expiration_date:
+              type: date
       responses:
         '200':
           description: successful
@@ -321,31 +435,37 @@ paths:
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user_id:
-                  type: integer
-                subscription_plan_id:
-                  type: integer
-                payment_status:
-                  type: string
-                expiration_date:
-                  type: date
     put:
       summary: update subscription
       tags:
       - Subscriptions
+      consumes:
+      - application/json
+      produces:
+      - application/json
       parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
       - name: id
         in: path
+        type: integer
         description: ID of the subscription to update
         required: true
+      - name: new_subscription
+        in: body
         schema:
-          type: integer
+          type: object
+          properties:
+            user_id:
+              type: integer
+            subscription_plan_id:
+              type: integer
+            payment_status:
+              type: string
+            expiration_date:
+              type: date
       responses:
         '200':
           description: successful
@@ -361,203 +481,22 @@ paths:
                     expiration_date: '2023-11-05T23:13:39.989Z'
                     created_at: '2023-11-05T23:13:39.989Z'
                     updated_at: '2023-11-05T23:13:39.989Z'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user_id:
-                  type: integer
-                subscription_plan_id:
-                  type: integer
-                payment_status:
-                  type: string
-                expiration_date:
-                  type: date
     delete:
       summary: delete subscription
       parameters:
       - name: id
         in: path
+        type: string
         description: id
         required: true
-        schema:
-          type: string
+      - name: Authorization
+        in: header
+        type: string
+        required: true
       tags:
       - Subscriptions
-      responses:
-        '204':
-          description: successful
-  "/sub/users":
-    get:
-      summary: list users
-      tags:
-      - Users
-      responses:
-        '200':
-          description: successful
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                  - id: 1
-                    name: string
-                    email: string
-                    password: 
-                    siape_code: string
-                    role: string
-                    created_at: '2023-11-05T23:13:39.989Z'
-                    updated_at: '2023-11-05T23:13:39.989Z'
-                    password_digest: "$2a$12$NPfxfVgQFpgcOSsojl.Kj.koRZAtCykhdIepZdPCALBe3/X6RtlNq"
-    post:
-      summary: create user
-      tags:
-      - Users
-      parameters: []
-      responses:
-        '201':
-          description: successful
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    id: 1
-                    name: string
-                    email: string
-                    password: 
-                    siape_code: string
-                    role: string
-                    created_at: '2023-11-05T23:13:39.989Z'
-                    updated_at: '2023-11-05T23:13:39.989Z'
-                    password_digest: "$2a$12$NPfxfVgQFpgcOSsojl.Kj.koRZAtCykhdIepZdPCALBe3/X6RtlNq"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                siape_code:
-                  type: string
-                role:
-                  type: string
-  "/sub/users/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
-    get:
-      summary: show user
-      tags:
-      - Users
-      responses:
-        '200':
-          description: successful
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    id: 1
-                    name: string
-                    email: string
-                    password: 
-                    siape_code: string
-                    role: string
-                    created_at: '2023-11-05T23:13:39.989Z'
-                    updated_at: '2023-11-05T23:13:39.989Z'
-                    password_digest: "$2a$12$NPfxfVgQFpgcOSsojl.Kj.koRZAtCykhdIepZdPCALBe3/X6RtlNq"
-    patch:
-      summary: update user
-      tags:
-      - Users
-      parameters: []
-      responses:
-        '200':
-          description: successful
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    id: 1
-                    name: string
-                    email: string
-                    password: 
-                    siape_code: string
-                    role: string
-                    created_at: '2023-11-05T23:13:39.989Z'
-                    updated_at: '2023-11-05T23:13:39.989Z'
-                    password_digest: "$2a$12$NPfxfVgQFpgcOSsojl.Kj.koRZAtCykhdIepZdPCALBe3/X6RtlNq"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                siape_code:
-                  type: string
-                role:
-                  type: string
-    put:
-      summary: update user
-      tags:
-      - Users
-      parameters: []
-      responses:
-        '200':
-          description: successful
-          content:
-            application/json:
-              examples:
-                example:
-                  value:
-                    id: 1
-                    name: string
-                    email: string
-                    password: 
-                    siape_code: string
-                    role: string
-                    created_at: '2023-11-05T23:13:39.989Z'
-                    updated_at: '2023-11-05T23:13:39.989Z'
-                    password_digest: "$2a$12$NPfxfVgQFpgcOSsojl.Kj.koRZAtCykhdIepZdPCALBe3/X6RtlNq"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                password:
-                  type: string
-                siape_code:
-                  type: string
-                role:
-                  type: string
-    delete:
-      summary: delete user
-      tags:
-      - Users
+      produces:
+      - application/json
       responses:
         '204':
           description: successful

@@ -8,11 +8,10 @@ RSpec.describe 'subscriptions', type: :request do
       tags 'Subscriptions'
       consumes 'application/json'
       produces 'application/json'
-
       parameter name: :new_subscription, in: :body, schema: {
         type: :object,
         properties: {
-          user_id: { type: :integer },
+          user_id: { type: :string },
           subscription_plan_id: { type: :integer },
         }
       }
@@ -43,6 +42,7 @@ RSpec.describe 'subscriptions', type: :request do
 
   path '/sub/subscription/{id}/cancel' do
     parameter name: 'id', in: :path, type: :string, description: 'id'
+    parameter name: :Authorization, in: :header, type: :string, required: true
 
     put('cancel subscription') do
       tags 'Subscriptions'
@@ -64,6 +64,7 @@ RSpec.describe 'subscriptions', type: :request do
   path '/sub/subscription/{id}/renew' do
     parameter name: 'id', in: :path, type: :string, description: 'Subscription ID'
     parameter name: :months_to_renew, in: :query, type: :integer, description: 'Number of months to renew', default: 1
+    parameter name: :Authorization, in: :header, type: :string, required: true
 
     put('renew subscription') do
       tags 'Subscriptions'
@@ -86,6 +87,8 @@ RSpec.describe 'subscriptions', type: :request do
   
   path '/sub/subscription/{id}/events' do
     parameter name: 'id', in: :path, type: :string, description: 'Subscription ID'
+    parameter name: :Authorization, in: :header, type: :string, required: true
+
 
     get('list subscription events') do
       tags 'Subscriptions'
@@ -130,7 +133,10 @@ RSpec.describe 'subscriptions', type: :request do
     end
 
   path '/sub/subscription/{id}' do
+    
     parameter name: 'id', in: :path, type: :string, description: 'id'
+    parameter name: :Authorization, in: :header, type: :string, required: true
+
 
     get('show subscription') do
       tags 'Subscriptions'
@@ -161,6 +167,7 @@ RSpec.describe 'subscriptions', type: :request do
       tags 'Subscriptions'
       consumes 'application/json'
       produces 'application/json'
+      parameter name: :Authorization, in: :header, type: :string, required: true
       parameter name: :id, in: :path, type: :integer, description: 'ID of the subscription to update'
       parameter name: :new_subscription, in: :body, schema: {
         type: :object,
@@ -200,6 +207,7 @@ RSpec.describe 'subscriptions', type: :request do
       tags 'Subscriptions'
       consumes 'application/json'
       produces 'application/json'
+      parameter name: :Authorization, in: :header, type: :string, required: true
       parameter name: :id, in: :path, type: :integer, description: 'ID of the subscription to update'
       parameter name: :new_subscription, in: :body, schema: {
         type: :object,
@@ -238,6 +246,7 @@ RSpec.describe 'subscriptions', type: :request do
   path '/sub/subscription/{id}' do
     delete('delete subscription') do
       parameter name: 'id', in: :path, type: :string, description: 'id'
+      parameter name: :Authorization, in: :header, type: :string, required: true
 
       tags 'Subscriptions'
       produces 'application/json'
@@ -250,5 +259,6 @@ RSpec.describe 'subscriptions', type: :request do
       end
     end
   end
+
 end
 end

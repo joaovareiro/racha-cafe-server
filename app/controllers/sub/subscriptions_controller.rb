@@ -1,6 +1,8 @@
 module Sub
   class SubscriptionsController < ApplicationController
+    include AuthenticationHelper
     before_action :set_subscription, only: [:show, :update, :destroy, :cancel, :renew, :events]
+    before_action :authenticate_request, only: [:show, :update, :destroy, :cancel, :renew, :events]
 
     def index
       @subscriptions = Subscription.all
@@ -39,7 +41,7 @@ module Sub
         create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months")
         render json: { message: "Subscription renewed successfully for #{months_to_renew} months" }
       else
-        if @subscription.payment_status == 'expired'
+        if @subscription.payment_status == 'expired' or @subscription.payment_status == 'inactive'
           new_expiration_date = Date.today + months_to_renew.months
           @subscription.update(payment_status: 'active', expiration_date: new_expiration_date)
           create_subscription_event('Subscription Renewed', "Subscription renewed for #{months_to_renew} months")
