@@ -8,9 +8,11 @@ Rails.application.routes.draw do
     resources :users
     resources :subscription_plans, path: 'plan'
     resources :subscriptions, path: 'subscription' do
-      post 'create_with_inactive_status', on: :collection
-      put 'cancel', on: :member
-      put 'renew', on: :member
+      member do
+        put 'cancel'
+        put 'renew'
+        get 'events'
+      end
     end
   end
 end

@@ -142,9 +142,9 @@ paths:
                   type: string
                 price:
                   type: integer
-  "/sub/subscription/create_with_inactive_status":
+  "/sub/subscription/":
     post:
-      summary: create_with_inactive_status subscription
+      summary: create subscription
       tags:
       - Subscriptions
       parameters: []
@@ -198,10 +198,16 @@ paths:
     parameters:
     - name: id
       in: path
-      description: id
+      description: Subscription ID
       required: true
       schema:
         type: string
+    - name: months_to_renew
+      in: query
+      description: Number of months to renew
+      default: 1
+      schema:
+        type: integer
     put:
       summary: renew subscription
       tags:
@@ -214,7 +220,34 @@ paths:
               examples:
                 example:
                   value:
-                    message: Subscription renewed successfully
+                    message: Subscription renewed successfully for 3 months
+  "/sub/subscription/{id}/events":
+    parameters:
+    - name: id
+      in: path
+      description: Subscription ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list subscription events
+      tags:
+      - Subscriptions
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              examples:
+                example:
+                  value:
+                  - id: 1
+                    name: Subscription Created
+                    description: New subscription created
+                    subscription_id: 1
+                    event_type: subscription_created
+                    created_at: '2023-11-26T19:21:32.123Z'
+                    updated_at: '2023-11-26T19:21:32.123Z'
   "/sub/subscription":
     get:
       summary: list subscriptions

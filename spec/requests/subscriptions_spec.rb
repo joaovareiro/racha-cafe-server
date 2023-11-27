@@ -62,25 +62,53 @@ RSpec.describe 'subscriptions', type: :request do
   end
 
   path '/sub/subscription/{id}/renew' do
-    parameter name: 'id', in: :path, type: :string, description: 'id'
+    parameter name: 'id', in: :path, type: :string, description: 'Subscription ID'
+    parameter name: :months_to_renew, in: :query, type: :integer, description: 'Number of months to renew', default: 1
 
     put('renew subscription') do
       tags 'Subscriptions'
 
       response(200, 'successful') do
-        let(:user) { User.create!(name: 'User 1', email: 'user@email.com',password: 'password', siape_code: '1234567',role: 'user') }
+        let(:user) { User.create!(name: 'User 1', email: 'user@email.com', password: 'password', siape_code: '1234567', role: 'user') }
         let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
-        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id: subscription_plan.id, payment_status: 'active', expiration_date: Date.today) }
         let(:id) { subscription.id }
+        let(:months_to_renew) { 3 } # Specify the number of months to renew
 
         example 'application/json', :example, {
-          "message": "Subscription renewed successfully"
+
+        "message": "Subscription renewed successfully for 3 months"
         }
         run_test!
       end
     end
   end
+  
+  path '/sub/subscription/{id}/events' do
+    parameter name: 'id', in: :path, type: :string, description: 'Subscription ID'
 
+    get('list subscription events') do
+      tags 'Subscriptions'
+
+      response(200, 'successful') do
+        let(:user) { User.create!(name: 'User 1', email: 'user@email.com', password: 'password', siape_code: '1234567', role: 'user') }
+        let(:subscription_plan) { SubscriptionPlan.create!(name: 'string', description: 'string', price: 100) }
+        let(:subscription) { Subscription.create!(user_id: user.id, subscription_plan_id:  subscription_plan.id, payment_status: 'inactive', expiration_date: Date.today) }
+        let(:id) { subscription.id }
+
+        example 'application/json', :example, [{
+          "id": 1,
+          "name": "Subscription Created",
+          "description": "New subscription created",
+          "subscription_id": 1,
+          "event_type": "subscription_created",
+          "created_at": "2023-11-26T19:21:32.123Z",
+          "updated_at": "2023-11-26T19:21:32.123Z",
+        }]
+        run_test!
+      end
+    end
+  end
 
   path '/sub/subscription' do
 
